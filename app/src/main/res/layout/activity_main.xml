@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black">
+
+<!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:id="@+id/moveTxtView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                android:textSize="@dimen/sp_182"-->
+<!--                android:textColor="#3F51B5"-->
+<!--                android:fontFamily="@font/maplestory_oft_bold"-->
+<!--                android:layout_marginStart="@dimen/dp_100"-->
+<!--                android:layout_marginTop="@dimen/dp_80"-->
+<!--                android:text="횟수"-->
+<!--                android:layout_marginLeft="@dimen/dp_200" />-->
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/showNumberTxtView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="@dimen/sp_182"
+                android:textColor="#546C36"
+                android:layout_marginTop="@dimen/dp_200"
+                android:fontFamily="@font/maplestory_oft_bold"
+                android:layout_marginStart="@dimen/dp_280"
+                android:layout_marginLeft="@dimen/dp_200" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/exampleLayout"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_450"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                android:layout_marginStart="@dimen/dp_50"
+                android:layout_marginEnd="@dimen/dp_50"
+                android:layout_marginTop="@dimen/dp_100">
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/questAreaLayout"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_1102"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                android:layout_marginStart="@dimen/dp_50"
+                android:layout_marginEnd="@dimen/dp_50"
+                android:layout_marginBottom="@dimen/dp_100">
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="threebythree">
+        <item>@drawable/jjangu1</item>
+        <item>@drawable/jjangu1</item>
+        <item>@drawable/jjangu1</item>
+        <item>@drawable/jjangu1</item>
+        <item>@drawable/jjangu1</item>
+        <item>@drawable/jjangu1</item>
+        <item>@drawable/jjangu1</item>
+        <item>@drawable/jjangu1</item>
+
+
+
+
+    </integer-array>
+
+    <integer-array name="fourbyfour">
+
+
+
+    </integer-array>
+
+    <integer-array name="fivebyfive">
+
+
+    </integer-array>
+</resources>
