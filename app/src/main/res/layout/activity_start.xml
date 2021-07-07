@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StartActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/gameNameTxtView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/maplestory_oft_bold"
+            android:text="PUZZLE"
+            android:textSize="@dimen/sp_182"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dp_100"
+            android:textColor="#CF6E90"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/firstBtn"
+            android:layout_width="@dimen/dp_400"
+            android:layout_height="@dimen/dp_200"
+            android:layout_marginTop="@dimen/dp_100"
+            android:background="@drawable/border_number"
+            android:fontFamily="@font/maplestory_oft_bold"
+            android:textColor="#B2ADDDB9"
+            android:textSize="@dimen/sp_100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gameNameTxtView"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/secondBtn"
+            android:layout_width="@dimen/dp_400"
+            android:layout_height="@dimen/dp_200"
+            android:layout_marginTop="@dimen/dp_100"
+            app:layout_constraintTop_toBottomOf="@+id/firstBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/border_number"
+            android:fontFamily="@font/maplestory_oft_bold"
+            android:textSize="@dimen/sp_100"
+            android:textColor="#B2ADDDB9"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/thirdBtn"
+            android:layout_width="@dimen/dp_400"
+            android:layout_height="@dimen/dp_200"
+            app:layout_constraintTop_toBottomOf="@+id/secondBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/border_number"
+            android:fontFamily="@font/maplestory_oft_bold"
+            android:layout_marginTop="@dimen/dp_100"
+            android:textSize="@dimen/sp_100"
+            android:textColor="#B2ADDDB9" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/easyBtn"
+            android:layout_width="@dimen/dp_400"
+            android:layout_height="@dimen/dp_180"
+            android:textSize="@dimen/sp_60"
+            app:layout_constraintTop_toBottomOf="@+id/thirdBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/border_light"
+            android:layout_marginTop="@dimen/dp_200"
+            app:layout_constraintEnd_toStartOf="@+id/normalBtn"
+            android:layout_marginStart="@dimen/dp_50"
+            android:textColor="#B2ADDDB9"
+            android:layout_marginLeft="@dimen/dp_50" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/normalBtn"
+            android:layout_width="@dimen/dp_400"
+            android:layout_height="@dimen/dp_180"
+            android:textSize="@dimen/sp_60"
+            android:layout_marginEnd="@dimen/dp_50"
+            app:layout_constraintStart_toEndOf="@+id/easyBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/border_light"
+            app:layout_constraintTop_toBottomOf="@+id/thirdBtn"
+            android:layout_marginTop="@dimen/dp_200"
+            android:textColor="#B2ADDDB9"
+            android:layout_marginRight="@dimen/dp_50" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/startBtn"
+            android:layout_width="@dimen/dp_600"
+            android:layout_height="@dimen/dp_200"
+            android:textColor="#CF6E90"
+            android:text="Start!"
+            android:textSize="@dimen/sp_135"
+            app:layout_constraintTop_toBottomOf="@+id/easyBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/border_light"
+            android:layout_marginTop="@dimen/dp_100"
+            android:fontFamily="@font/maplestory_oft_bold" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

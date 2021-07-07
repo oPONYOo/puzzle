@@ -1,7 +1,10 @@
 package com.example.puzzle
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
@@ -32,24 +35,26 @@ class GameLayout(context: Context, attrs: AttributeSet? = null) : ConstraintLayo
         mWidth = view.layoutParams.width
     }
 
-    fun setQuestNum(questNum: Int): GameLayout {
-        this.mQuestNum = questNum
-        return this
-    }
-
-    fun setQuestImg(questNum: Drawable): GameLayout{
-        this.mCardLayout.background = questNum
-
-        return this
-    }
-
-    fun setImg(){
-        if (this.mQuestNum !=0){
-            mCardLayout.setBackgroundResource(R.drawable.jjangu1)
+    fun setQuestNum(questNum: Int, difficulty: Boolean): GameLayout {
+        if (difficulty){
+            this.mQuestNum = questNum
+            mTxtView.visibility = View.VISIBLE
+        }else{
+            this.mQuestNum = questNum
+            mTxtView.visibility = View.INVISIBLE
         }
 
+        return this
+    }
+
+    fun setQuestImg(questNum: Bitmap, difficulty: Boolean): GameLayout{
+        if (!difficulty){
+            this.mCardLayout.background = BitmapDrawable(resources, questNum)
+        }
+        return this
 
     }
+
 
     fun setXY(x: Float, y: Float): GameLayout {
         this.mX = x

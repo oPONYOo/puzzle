@@ -4,6 +4,8 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Point
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,12 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
-    private var mnextNum = 1
     private var mCurrentNum = 0
-    private var pos = 0
-    private var count = 0
 
-    var finish = false
     private var sizevalueFloat = 0f
     private var sizevalueInt = 0
 
@@ -35,30 +33,26 @@ class MainActivity : AppCompatActivity() {
     private var size_y = 0
     private var nullX = 0f
     private var nullY = 0f
-    private lateinit var x : View
-    private var y = 0f
 
-    private var xaxis: Boolean = true
     private var what1: Boolean = true
 
-    private var directionList = ArrayList<String>()
     private var arraylist = ArrayList<Int>()
     private var arraylist2 = ArrayList<Int>()
     private var examplelist = ArrayList<Int>()
-    private var imgList = Vector<Int>()
+    private var imgList = ArrayList<Bitmap>()
 
-    private var UP = 1
-    private var DOWN = 2
-    private var RIGHT = 3
-    private var LEFT = 4
+    private var UP = 0
+    private var DOWN = 1
+    private var RIGHT = 2
+    private var LEFT = 3
 
     private var gameNum = 0
     private var clickPos = 0
     private var nullNum = 0
+    private var difficulty = true
 
-    private lateinit var mrandList: ArrayList<Int>
     private var numquestLayout = ArrayList<GameLayout>()
-    private lateinit var nullGameLayout : GameLayout
+    private lateinit var nullGameLayout: GameLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -68,37 +62,25 @@ class MainActivity : AppCompatActivity() {
         changeSize()
 
         if (savedInstanceState == null) {
-            initGame("3x3", "easy")
+            initGame(intent.getStringExtra("level")!!, intent.getStringExtra("difficulty")!!)
         }
     }
 
-    @SuppressLint("Recycle")
-    fun initGame(GmLevel: String, difficulty: String) {
+    fun initGame(GmLevel: String, Gmdifficulty: String) {
         when (GmLevel) {
 
             "3x3" -> {
                 sizevalueFloat = 3f
                 sizevalueInt = 3
                 gameNum = 9
-                when(difficulty){
-                    "easy" -> {
-                        for (i in 0..8) {
-                            arraylist.add(i)
-                        }
-                        for (i in 1..9) {
-                            examplelist.add(i)
-                        }
-                    }
-                    "hard" -> {
-                        val imageList1 = resources.obtainTypedArray(R.array.threebythree)
-                        for (i in 0 until  imageList1.length()) {
-                            val drawable = imageList1.getDrawable(i)
-                            Log.e("drawable", "${drawable}")
-                        }
-
-                    }
+                for (i in 1..8) {
+                    arraylist.add(i)
                 }
-                for (i in 1..8){
+                arraylist.add(0)
+                for (i in 1..9) {
+                    examplelist.add(i)
+                }
+                for (i in 1..8) {
                     arraylist2.add(i)
                 }
                 arraylist2.add(0)
@@ -107,54 +89,60 @@ class MainActivity : AppCompatActivity() {
                 sizevalueFloat = 4f
                 sizevalueInt = 4
                 gameNum = 16
-                when(difficulty){
-                    "easy" -> {
-                        for (i in 0..15) {
-                            arraylist.add(i)
-                        }
-                        for (i in 1..16) {
-                            examplelist.add(i)
-                        }
-                    }
-
+                for (i in 1..15) {
+                    arraylist.add(i)
                 }
+                arraylist.add(0)
+                for (i in 1..16) {
+                    examplelist.add(i)
+                }
+                for (i in 1..15) {
+                    arraylist2.add(i)
+                }
+                arraylist2.add(0)
 
             }
             "5x5" -> {
                 sizevalueFloat = 5f
                 sizevalueInt = 5
                 gameNum = 25
-                when(difficulty){
-                    "easy" -> {
-                        for (i in 0..24) {
-                            arraylist.add(i)
-                        }
-                        for (i in 1..25) {
-                            examplelist.add(i)
-                        }
-                    }
-
+                for (i in 1..24) {
+                    arraylist.add(i)
                 }
+                arraylist.add(0)
+                for (i in 1..25) {
+                    examplelist.add(i)
+                }
+                for (i in 1..24) {
+                    arraylist2.add(i)
+                }
+                arraylist2.add(0)
             }
 
         }
+        difficulty = when (Gmdifficulty) {
+            "easy" -> true
+            else -> false
+        }
 
 
-        count = 0
         CoroutineScope(mainDispatcher).launch {
             delay(1000L)
-            mrandList = genRandom()
-            count = 1
-            genQuest()
+            genImg()
             genExample()
-            Log.e("rest", "${1%2}")
-            Log.e("rest", "${4%2}")
-            Log.e("rest", "${7%2}")
-            Log.e("rest", "${2%2}")
-            Log.e("rest", "${5%2}")
-            Log.e("rest", "${8%2}")
+            genRandom()
+            genQuest()
+
+
+            Log.e("rest", "${1 % 2}")
+            Log.e("rest", "${4 % 2}")
+            Log.e("rest", "${7 % 2}")
+            Log.e("rest", "${2 % 2}")
+            Log.e("rest", "${5 % 2}")
+            Log.e("rest", "${8 % 2}")
         }
     }
+
     fun getSize(): Point {
         val display = windowManager.defaultDisplay // in case of Activity
         /* val display = activity!!.windowManaver.defaultDisplay */ // in case of Fragment
@@ -176,55 +164,101 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun genRandom(): ArrayList<Int> {
+    private fun genImg() {
+        val originImgView = BitmapFactory.decodeResource(resources, R.drawable.pricess)
+        //imgList.add(originImgView)
+        for (i in 0 until gameNum) {
+            val cropImgView = Bitmap.createBitmap(
+                originImgView,
+                originImgView.width / sizevalueInt * (i % sizevalueInt),
+                originImgView.height / sizevalueInt * (i / sizevalueInt),
+                originImgView.width / sizevalueInt,
+                originImgView.height / sizevalueInt
+            )
+            Log.e("xx", "${i % sizevalueInt}")
+            Log.e("width", "${originImgView.width }")
+            Log.e("height", "${originImgView.height}")
+            imgList.add(cropImgView)
+        }
 
-        for (i in 0..100){
+    }
+
+
+    private fun genRandom() {
+
+        for (i in 0..1000) {
             nullNum = arraylist.indexOf(0)
             Log.e("nullNum", "${nullNum}")
-            when(Random().nextInt(4)){
+            Log.e("imgList", "${imgList}")
+            val nullNumImg = imgList[nullNum]
+            Log.e("nullNum", "${nullNumImg}")
+            when (Random().nextInt(4)) {
 
-                 UP -> {
-                     if (nullNum - sizevalueInt >= 0){
-                         arraylist[nullNum] = arraylist[nullNum - sizevalueInt]
-                         arraylist[nullNum - sizevalueInt] = 0
-                     }else{
-                         arraylist[nullNum] = arraylist[nullNum + sizevalueInt]
-                         arraylist[nullNum + sizevalueInt] = 0
-                     }
+                UP -> {
+                    if (nullNum - sizevalueInt >= 0) {
+                        Log.e("up", "up")
+                        arraylist[nullNum] = arraylist[nullNum - sizevalueInt]
+                        arraylist[nullNum - sizevalueInt] = 0
+                        imgList[nullNum] = imgList[nullNum - sizevalueInt]
+                        imgList[nullNum - sizevalueInt] = nullNumImg
+                    } else {
+                        Log.e("up", "down")
+                        arraylist[nullNum] = arraylist[nullNum + sizevalueInt]
+                        arraylist[nullNum + sizevalueInt] = 0
+                        imgList[nullNum] = imgList[nullNum + sizevalueInt]
+                        imgList[nullNum + sizevalueInt] = nullNumImg
+                    }
 
 
                 }
                 DOWN -> {
-                    if (nullNum + sizevalueInt < gameNum){
+                    if (nullNum + sizevalueInt < gameNum) {
+                        Log.e("down", "down")
                         arraylist[nullNum] = arraylist[nullNum + sizevalueInt]
                         arraylist[nullNum + sizevalueInt] = 0
-                    }else{
+                        imgList[nullNum] = imgList[nullNum + sizevalueInt]
+                        imgList[nullNum + sizevalueInt] = nullNumImg
+                    } else {
+                        Log.e("down", "up")
                         arraylist[nullNum] = arraylist[nullNum - sizevalueInt]
                         arraylist[nullNum - sizevalueInt] = 0
+                        imgList[nullNum] = imgList[nullNum - sizevalueInt]
+                        imgList[nullNum - sizevalueInt] = nullNumImg
                     }
 
                 }
                 LEFT -> {
-                    if (nullNum % sizevalueInt != 0){
+                    Log.e("leftnum", "${nullNum % sizevalueInt}")
+                    if (nullNum % sizevalueInt != 0) {
+                        Log.e("left", "left")
+                        Log.e("check", "${nullNum % sizevalueInt}")
                         arraylist[nullNum] = arraylist[nullNum - 1]
                         arraylist[nullNum - 1] = 0
-                    }
-                    else {
+                        imgList[nullNum] = imgList[nullNum - 1]
+                        imgList[nullNum - 1] = nullNumImg
+                    } else {
+                        Log.e("left", "right")
                         arraylist[nullNum] = arraylist[nullNum + 1]
                         arraylist[nullNum + 1] = 0
+                        imgList[nullNum] = imgList[nullNum + 1]
+                        imgList[nullNum + 1] = nullNumImg
                     }
                 }
                 RIGHT -> {
-                    if (nullNum % sizevalueInt != sizevalueInt-1){
+                    if (nullNum % sizevalueInt != sizevalueInt - 1) {
                         Log.e("true1", "True")
                         Log.e("dd", "${nullNum % sizevalueInt}")
                         arraylist[nullNum] = arraylist[nullNum + 1]
                         arraylist[nullNum + 1] = 0
-                    }else{
+                        imgList[nullNum] = imgList[nullNum + 1]
+                        imgList[nullNum + 1] = nullNumImg
+                    } else {
                         Log.e("true2", "True")
                         Log.e("dd1", "${nullNum % sizevalueInt}")
                         arraylist[nullNum] = arraylist[nullNum - 1]
                         arraylist[nullNum - 1] = 0
+                        imgList[nullNum] = imgList[nullNum - 1]
+                        imgList[nullNum - 1] = nullNumImg
                     }
 
                 }
@@ -232,24 +266,17 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-        val idx = ArrayList<Int>()
-        for (i in 0 until arraylist.size) {
-            idx.add(arraylist[i])
 
-        }
-        return idx
     }
 
 
-
-    private fun genExample(){
+    private fun genExample() {
         changeSize = binding.exampleLayout.width / sizevalueFloat
 
         for (count in 0 until examplelist.size) {
             val questLayout = GameLayout(this)
-            questLayout.setQuestNum(examplelist[count])
+            questLayout.setQuestNum(examplelist[count], difficulty).setQuestImg(imgList[count], difficulty)
                 .setXY(changeSize!! * (count % sizevalueInt), changeSize!! * (count / sizevalueInt))
-                .setVisible(true)
 
             questLayout.setFinally()
             questLayout.cardVisible()
@@ -264,11 +291,12 @@ class MainActivity : AppCompatActivity() {
     private fun genQuest() {
         changeSize = binding.questAreaLayout.width / sizevalueFloat
 
-        for (count in 0 until mrandList.size) {
+        for (count in 0 until arraylist.size) {
             val questLayout = GameLayout(this)
-            questLayout.setQuestNum(mrandList[count])
+            Log.e("array", "${arraylist}")
+
+            questLayout.setQuestNum(arraylist[count], difficulty).setQuestImg(imgList[count], difficulty)
                 .setXY(changeSize!! * (count % sizevalueInt), changeSize!! * (count / sizevalueInt))
-                .setVisible(true)
 
             questLayout.setFinally()
             questLayout.cardVisible()
@@ -277,62 +305,55 @@ class MainActivity : AppCompatActivity() {
             questLayout.layoutParams.width = changeSize!!.toInt()
             questLayout.layoutParams.height = changeSize!!.toInt()
 
-            }
-
-            Log.e("mrandList", "${mrandList}")
+        }
 
 
 
-        for (j in 0 until mrandList.size) {
+
+        for (j in 0 until arraylist.size) {
             val questLayout = binding.questAreaLayout.getChildAt(j) as GameLayout
-            questLayout.setVisible(true)
-            val questTxtView: AppCompatTextView = questLayout.findViewById(R.id.numberTxtView)
             binding.showNumberTxtView.text = mCurrentNum.toString()
             numquestLayout.add(questLayout)
-            questLayout.tag = mrandList[j]
+            questLayout.tag = arraylist[j]
 
 
             questLayout.setOnClickListener {
-                nullNum = mrandList.indexOf(0)
+                nullNum = arraylist.indexOf(0)
                 nullGameLayout = numquestLayout[nullNum]
-                clickPos = mrandList.indexOf(it.tag.toString().toInt())
+                clickPos = arraylist.indexOf(it.tag.toString().toInt())
                 nullX = numquestLayout[nullNum].x
                 nullY = numquestLayout[nullNum].y
                 Log.e("nullX0", "${nullX}")
                 Log.e("nullY0", "${nullY}")
-                Log.e("mranList", "${mrandList}")
                 Log.e("clickPos", "${clickPos}")
                 Log.e("nullNum", "${nullNum}")
-                Log.e("ss", "${(clickPos+1)%sizevalueInt}")
+                Log.e("ss", "${(clickPos + 1) % sizevalueInt}")
                 //왼쪽
-                if (nullNum == clickPos - 1 && clickPos%sizevalueInt != 0){
-                    mrandList[nullNum] = mrandList[clickPos]
-                    mrandList[clickPos] = 0
+                if (nullNum == clickPos - 1 && clickPos % sizevalueInt != 0) {
+                    arraylist[nullNum] = arraylist[clickPos]
+                    arraylist[clickPos] = 0
                     initAnim(numquestLayout[nullNum], numquestLayout[clickPos].x, true, true)
                     initAnim(numquestLayout[clickPos], nullX, true, false)
                     //오른쪽
-                }else if (nullNum == clickPos + 1 && (clickPos+1)%sizevalueInt != 0  ){
+                } else if (nullNum == clickPos + 1 && (clickPos + 1) % sizevalueInt != 0) {
                     // clickPos에 1을 더해줘야 2,5,8 숫자 안바뀜
-                    mrandList[nullNum] = mrandList[clickPos]
-                    mrandList[clickPos] = 0
+                    arraylist[nullNum] = arraylist[clickPos]
+                    arraylist[clickPos] = 0
                     initAnim(numquestLayout[nullNum], numquestLayout[clickPos].x, true, true)
                     initAnim(numquestLayout[clickPos], nullX, true, false)
                     //위
-                }else if (clickPos-sizevalueInt == nullNum ) {
-                    mrandList[nullNum] = mrandList[clickPos]
-                    mrandList[clickPos] = 0
+                } else if (clickPos - sizevalueInt == nullNum) {
+                    arraylist[nullNum] = arraylist[clickPos]
+                    arraylist[clickPos] = 0
                     initAnim(numquestLayout[nullNum], numquestLayout[clickPos].y, false, true)
                     initAnim(numquestLayout[clickPos], nullY, false, false)
                     //아래
-                }else if (clickPos+sizevalueInt == nullNum ){
-                    mrandList[nullNum] = mrandList[clickPos]
-                    mrandList[clickPos] = 0
+                } else if (clickPos + sizevalueInt == nullNum) {
+                    arraylist[nullNum] = arraylist[clickPos]
+                    arraylist[clickPos] = 0
                     initAnim(numquestLayout[nullNum], numquestLayout[clickPos].y, false, true)
                     initAnim(numquestLayout[clickPos], nullY, false, false)
                 }
-
-
-
 
 
             }
@@ -341,28 +362,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initAnim(moveLayout: View, Value: Float, xAxis: Boolean, what: Boolean) {
-        val propertyName = if (xAxis){
+        val propertyName = if (xAxis) {
             "translationX"
-        }else{
+        } else {
             "translationY"
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         Log.e("mcurrentNum", "${mCurrentNum}")
-        ObjectAnimator.ofFloat(moveLayout, propertyName, Value )
+        ObjectAnimator.ofFloat(moveLayout, propertyName, Value)
             .apply {
                 duration = 300
                 addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        if (!what){
+                        if (!what) {
                             numquestLayout[nullNum] = numquestLayout[clickPos]
                             numquestLayout[clickPos] = nullGameLayout
                             mCurrentNum++
                             binding.showNumberTxtView.text = mCurrentNum.toString()
-                            Log.e("mrandList2", "${mrandList}")
                             Log.e("what1", "${what1}")
-                            if (mrandList == arraylist2){
+                            if (arraylist == arraylist2) {
                                 binding.moveTxtView.text = "끝"
-                                window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                                for (j in 0 until arraylist.size) {
+                                    val questLayout =
+                                        binding.questAreaLayout.getChildAt(j) as GameLayout
+                                    questLayout.setOnClickListener(null)
+                                }
                             }
                         }
                         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
